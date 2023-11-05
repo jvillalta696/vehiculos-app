@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { createUser } from '../../libs/auth';
+import { signIn, signout } from '../../libs/auth';
 const LoginForm = () => {
     
     const [user, setUser] = useState({}); 
@@ -8,6 +8,16 @@ const LoginForm = () => {
         const { name,value} = e.target;
         setUser({...user,[name]:value});
         console.log(name,' | ',value)
+    }
+    
+    const  handleSignIn = async (e)=>{
+      e.preventDefault();
+      console.log(user)
+      try {
+        await signIn(user.email,user.password);
+      } catch (error) {
+        alert(error.message)
+      }
     }
 
   return (
@@ -21,9 +31,8 @@ const LoginForm = () => {
         <input type="password" name="password" onChange={handleOnChange}/>
         </div>
         <div>
-            <button type="submit">Entrar</button>
-            <button type="submit">Salir</button>
-            <button type="submit" onClick={createUser}>Registra</button>
+            <button type="submit" onClick={handleSignIn}>Entrar</button>
+            <button type="submit" onClick={signout}>Salir</button>         
         </div>
     </div>
   )
