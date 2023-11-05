@@ -26,7 +26,6 @@ export const signIn = async(email,password)=>{
 }
 
 export const signout = async()=>{
-
   signOut(auth).then(() => {
   console.log('logout successfully')
 }).catch((error) => {
