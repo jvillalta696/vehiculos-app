@@ -19,7 +19,6 @@ export const getVehiculo = async(vin, dbcode)=>{
         const response = await axios.get(`https://db.cloud.delserint.com:1889/api/Vehiculo/ListVehiculo?CodeBD=${dbcode}&VIN=${vin}`,{
             headers: { Authorization: `Bearer ${token}` }
         });
-        console.log(response.data);
         return response.data;
     } catch (error) {
         throw error
@@ -32,8 +31,6 @@ export const getUbicacion = async(dbcode)=>{
         const response = await axios.get(`https://db.cloud.delserint.com:1889/api/Ubicacion/ListUbica?CodeBD=${dbcode}`,{
             headers: { Authorization: `Bearer ${token}` }
         });
-        console.log(response.data);
-        console.log(response.data.length);
         return response.data;
     } catch (error) {
         throw error
@@ -47,12 +44,24 @@ export const getColor = async(dbcode)=>{
         const response = await axios.get(`https://db.cloud.delserint.com:1889/api/Color/ListColor?CodeBD=${dbcode}`,{
             headers: { Authorization: `Bearer ${token}` }
         });
-        console.log(response.data);
-        console.log(response.data.length);
         return response.data;
     } catch (error) {
         throw error
     }
 }
+
+export const pathVehiculo = async(data,dbcode,vin)=>{
+    try {
+        const token = await getToken();
+        const response = await axios.patch(`https://db.cloud.delserint.com:1889/api/UpdateVehiculo/UpVehiculo?CodeBD=${dbcode}&VIN=${vin}`,
+        data,{
+            headers: { Authorization: `Bearer ${token}` }
+        })
+        return response.data;
+    } catch (error) {
+        throw error
+    }
+}
+
 
 
