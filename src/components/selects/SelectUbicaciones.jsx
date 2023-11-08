@@ -3,9 +3,10 @@ import { getUbicacion } from '../../services/vehiculos.service';
 import { useAuth } from '../../contexts/AuthContext';
 import Loading from '../loadings/Loading';
 
-const SelectUbicaciones = ({codUb}) => {
+const SelectUbicaciones = ({data, update}) => {
 
     const [ubicaciones, setUbicaciones] = useState(null);
+    const [currentUB, setCurrentUB] = useState("");
     const {config} = useAuth();
 
     const handleGetUbicaciones = async(dbCode)=>{
@@ -20,11 +21,18 @@ const SelectUbicaciones = ({codUb}) => {
     useEffect(() => {
         if(config)
       handleGetUbicaciones(config.dbCode);
-    }, [config])
+    }, [config]);
+
+    useEffect(() => {      
+      if(data)setCurrentUB(data);
+      console.log('codub_efect')
+  }, [data]);
+
+
     
-  return ubicaciones && (
+  if(ubicaciones) {return (
     <>
-    <select name="CodUbicacion" value={codUb&&codUb||''}>
+    <select name="CodUbicacion" onChange={update}value={currentUB} disabled={!config.modifyFields.CodUbicacion}>
         <option value="">Seleccione una opcion</option>
         {
             ubicaciones.map((ub)=>(
@@ -33,7 +41,7 @@ const SelectUbicaciones = ({codUb}) => {
         }
     </select>
     </>
-  )||<Loading/>
+  )}else{return <Loading/>}
 }
 
 export default SelectUbicaciones
