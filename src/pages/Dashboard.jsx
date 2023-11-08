@@ -1,49 +1,33 @@
 import React, { useState } from 'react'
 import { useAuth } from '../contexts/AuthContext'
-import { getColor, getUbicacion, getVehiculo } from '../services/vehiculos.service'
-import SelectUbicaciones from '../components/selects/SelectUbicaciones';
+import { getVehiculo } from '../services/vehiculos.service'
+import TableVehiculos from '../components/tables/TableVehiculos';
+import VehiculoForm from '../components/forms/VehiculoForm';
 
 const Dashboard = () => {
     
-    const [vehiculo, setVehiculo] = useState({});
-    const [codUb, setCodUb] = useState(null)    
+    const [vehiculos, setVehiculos] = useState(null);
+    const [currentVehiculo, setCurrentVehiculo] = useState(null);
+    const [vin, setVin] = useState(null);
+    const [codUb, setCodUb] = useState(null); 
+    const [codColor, setCodColor] = useState(null);    
     const {signout, config} = useAuth()
 
     const handleOnChange = (e)=>{
         const { name,value} = e.target;
-        setVehiculo({...vehiculo,[name]:value});
+        setVin(value);
         console.log(name,' | ',value)
     };
     
     const handleGetVehiculoByVIN = async()=>{
        try {
-        const {vin}= vehiculo
+         setCurrentVehiculo(null);        
         const data = await getVehiculo(vin,config.dbCode);
-        setVehiculo(data[0]);
-        setCodUb(data[0].CodUbicacion)
+        setVehiculos(data);        
        } catch (error) {
         alert(error.message)
        }
     };
-
-    const handleGetColor = async()=>{
-        try {
-         const {dbcode}= vehiculo
-         await getColor(dbcode);
-        } catch (error) {
-         alert(error.message)
-        }
-     };
-
-     const handleGetUbicación = async()=>{
-        try {
-         const {dbcode}= vehiculo
-         await getUbicacion(dbcode);
-        } catch (error) {
-         alert(error.message)
-        }
-     };
-
 
   return (
     <>
@@ -55,9 +39,10 @@ const Dashboard = () => {
     <label htmlFor="vin">VIN</label>
     <input type="text" name="vin" onChange={handleOnChange}/>
     <button onClick={handleGetVehiculoByVIN}>GET VEHICULO</button>
-    <button onClick={handleGetUbicación}>GET UBICACION</button>
-    <button onClick={handleGetColor}>GET COLOR</button>
-    <SelectUbicaciones value={{codUb}}/>
+    <div>
+      {vehiculos&&<TableVehiculos data={vehiculos} update={setCurrentVehiculo} reset={setVehiculos}/>}
+      {currentVehiculo&&<VehiculoForm data={currentVehiculo} close={setCurrentVehiculo}/>}
+    </div>
     </main>
     <footer>
 
