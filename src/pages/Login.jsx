@@ -18,10 +18,11 @@ const Login = () => {
     e.preventDefault();
     try {
       setCargando(true);
-      const data = await signIn(formUser.email, formUser.psw);
+      await signIn(formUser.email, formUser.psw);
       setCargando(false);
     } catch (error) {
       console.log(error.message);
+      alert(error.message)
       setCargando(false);
       //M.toast({html: error.message, classes: 'rounded red'});
     }
@@ -77,7 +78,7 @@ const Login = () => {
               </div>
               <div className="row">
                 <div className="col s12 center" style={{margin:'10px'}}>
-                  <button className='btn wave-effect wave-light blue-grey darken-3' onClick={(e) => { handleSubmit(e) }}><i className='material-icons right'>start</i>Entrar</button>
+                  <button className='btn wave-effect wave-light blue-grey darken-3' onClick={handleSubmit}><i className='material-icons right'>start</i>Entrar</button>
                 </div>
                 {
                   cargando && <div className="col s12"><Loading/></div>
