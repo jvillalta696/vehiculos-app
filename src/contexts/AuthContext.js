@@ -25,12 +25,12 @@ export const AuthProvider = ({ children }) => {
 
     const signIn = async(email, psw) => {
         try {
-            setPersistence(auth, browserSessionPersistence)
+            await setPersistence(auth, browserSessionPersistence)
                 .then(() => {
                     return signInWithEmailAndPassword(auth, email, psw);
-                })
-            return signInWithEmailAndPassword(auth, email, psw)           
+                })        
             .catch((e)=>{throw e})
+            //await signInWithEmailAndPassword(auth, email, psw)
         } catch (error) {
             throw error
         }
@@ -39,7 +39,7 @@ export const AuthProvider = ({ children }) => {
     const signout = () => signOut(auth)
 
     const getConfig = async()=>{
-        if(user && !config){
+        if(user){
             const usrConf = await getById('Usuarios',user.uid);
             setConfig(usrConf.data());
             console.log(usrConf.data());
