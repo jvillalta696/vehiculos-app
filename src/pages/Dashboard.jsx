@@ -3,6 +3,7 @@ import { useAuth } from '../contexts/AuthContext'
 import { getVehiculo } from '../services/vehiculos.service'
 import TableVehiculos from '../components/tables/TableVehiculos';
 import VehiculoForm from '../components/forms/VehiculoForm';
+import Loading from '../components/loadings/Loading';
 
 const Dashboard = () => {
     
@@ -27,7 +28,7 @@ const Dashboard = () => {
        }
     };
 
-  return (
+  if(config){ return (
     <>
     <header>
     <button onClick={signout}>Salir</button>
@@ -47,7 +48,7 @@ const Dashboard = () => {
 
     </footer>
     </>
-  )
+  )} else { return (<Loading/>)}
 }
 
 export default Dashboard
