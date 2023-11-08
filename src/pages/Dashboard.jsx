@@ -8,9 +8,7 @@ const Dashboard = () => {
     
     const [vehiculos, setVehiculos] = useState(null);
     const [currentVehiculo, setCurrentVehiculo] = useState(null);
-    const [vin, setVin] = useState(null);
-    const [codUb, setCodUb] = useState(null); 
-    const [codColor, setCodColor] = useState(null);    
+    const [vin, setVin] = useState(null);  
     const {signout, config} = useAuth()
 
     const handleOnChange = (e)=>{
@@ -36,6 +34,7 @@ const Dashboard = () => {
     </header>
     <main>
     <h1>Dashboard</h1>
+    <h3>Compañia: {config.companyName}</h3>
     <label htmlFor="vin">VIN</label>
     <input type="text" name="vin" onChange={handleOnChange}/>
     <button onClick={handleGetVehiculoByVIN}>GET VEHICULO</button>
