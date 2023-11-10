@@ -1,4 +1,4 @@
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import {  deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "../backend/firebase";
 
 
@@ -11,4 +11,14 @@ export const getById = async(collectionName,id)=>{
 export const update = async(collectionName, data,id)=>{
     const newDocRef = doc(db,collectionName,id);
     await updateDoc(newDocRef,data)
+}
+
+export const insert = async(collectionName, data,id)=>{
+    const newDocRef = doc(db,collectionName,id);
+    await setDoc(newDocRef,data)
+}
+
+export const remove = async(collectionName, id)=>{
+    const deleteDocRef =  doc(db,collectionName,id);
+    await deleteDoc(deleteDocRef);
 }

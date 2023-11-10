@@ -1,10 +1,27 @@
 import React, { useEffect, useState } from 'react'
-import { getUsers } from '../services/autUser.service'
+import { addUsers, deleteUser, getUsers } from '../services/autUser.service'
 import Loading from '../components/loadings/Loading';
-import { getById, update } from '../services/firestore.service';
+import { getById, insert, remove, update } from '../services/firestore.service';
+import UserForm from '../components/forms/UserForm';
 
 const ConfigView = () => {
 
+    const templateUser = {
+        email:"",
+        password:"",
+        dbCode: "",
+        rol:"",
+        companyName:"",
+        modifyFields:{
+            CodColorTap:true,
+            CodUbicacion:true,
+            Comentarios:true,
+            DUA:true,
+            kilometraje:true,
+        }
+    }
+
+    const [typeForm, setTypeForm] = useState("");
     const [users, setUsers] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
 
@@ -47,9 +64,39 @@ const ConfigView = () => {
         }
     }
 
+    const handleCreateUser = async (newUser)=>{
+        try {
+            console.log(newUser);
+        const {
+            companyName,
+            dbCode,
+            email,
+            modifyFields,
+            password,
+            rol,
+        } = newUser;
+        const response = await addUsers({email,password});
+        await insert("Usuarios",{dbCode,companyName,email,modifyFields,rol,uid:response.uid},response.uid);
+        alert("usuario creado exitosamente");
+        setCurrentUser(null);
+        setUsers(null);
+        await  handleGetUser();
+        } catch (error) {
+            alert(error.message)
+        }
+    }
+
+    const handleDelete = async (id)=>{
+        await deleteUser(id);
+        await remove("Usuarios",id);
+        alert("Usuario borrado con exito");
+        setUsers(null);
+        await  handleGetUser();
+    }
+
     const handleOnChange = (e) => {
-        const { name, value } = e.target;
-        setCurrentUser({ ...currentUser, [name]: value })
+        const { name, value, selectedOptions} = e.target;
+        setCurrentUser({ ...currentUser, [name]: value,companyName: name === "dbCode" ? selectedOptions[0].text : currentUser.companyName, })
     }
 
     useEffect(() => {
@@ -60,55 +107,24 @@ const ConfigView = () => {
     if (users) {
         return (
             <div>
-                <h1>ConfigView</h1>
-                {!currentUser && <ul>
+                <h1>ConfigView</h1>                
+                {!currentUser && <>
+                <button onClick={()=>{setTypeForm("add");setCurrentUser(templateUser)}}>Agregar Usuario</button>
+                <ul>
                     {users.map(usr => (
                         <li key={usr.uid}>
                             {usr.email}
-                            <button onClick={() => { handlegetCurrentUser(usr.uid, usr.email) }}>Edit</button>
+                            <button onClick={() => {setTypeForm("update");handlegetCurrentUser(usr.uid, usr.email) }}>Edit</button>
+                            <button onClick={()=>{handleDelete(usr.uid)}}>Delete</button>
                         </li>
-
                     ))}
-                </ul>}
-                {currentUser && <>
-                    <div>
-                        <label htmlFor="email">Usuario: </label>
-                        {/*<input type="text" name="email" onChange={handleOnChange} value={currentUser.email} />*/}
-                        <span>{currentUser.email}</span>
-                    </div>
-                    <div>
-                        <label htmlFor="rol">Rol:</label>
-                        <select name="rol" onChange={handleOnChange} value={currentUser.rol}>
-                            <option value="user">User</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                        <label htmlFor="dbCode">Compañia :</label>
-                        <select name="dbCode" onChange={handleOnChange} value={currentUser.dbCode}>
-                            <option value="01">Cori Car</option>
-                            <option value="02">GrandMotors</option>
-                        </select>
-                    </div>
-
-
-                    <ul>
-                        {Object.keys(currentUser.modifyFields).map((propertyName) => (
-                            <li key={propertyName}>
-                                {propertyName}: {currentUser.modifyFields[propertyName] === true ? 'Verdadero' : 'Falso'}
-                                <button onClick={() => { handleModificarPropiedad(propertyName) }}>
-                                    Cambiar
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
-                    <button onClick={() => { handleUpdateUser(currentUser.id) }}>Actualizar</button>
-                    <button onClick={() => { setCurrentUser(null) }}>salir</button>
+                </ul>
                 </>}
+                {currentUser &&<UserForm currentUser={currentUser} updateUser={handleUpdateUser} updateCurrent={setCurrentUser} addUser={handleCreateUser} change={handleOnChange} modifyProperty={handleModificarPropiedad} typeForm={typeForm}/>}
             </div>
 
         )
     } else { return (<Loading />) }
-
-
 }
 
 
