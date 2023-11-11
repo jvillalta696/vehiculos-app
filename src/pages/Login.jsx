@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react'
-import {  useAuth } from "../contexts/AuthContext";
+import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/loadings/Loading";
-//mport M from '@materializecss/materialize';
+import M from 'materialize-css';
 
 const Login = () => {
 
@@ -12,7 +12,7 @@ const Login = () => {
     email: '',
     psw: ''
   });
-  const [cargando,setCargando] =useState(false);
+  const [cargando, setCargando] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,9 +22,9 @@ const Login = () => {
       setCargando(false);
     } catch (error) {
       console.log(error.message);
-      alert(error.message)
+      //alert(error.message)
       setCargando(false);
-      //M.toast({html: error.message, classes: 'rounded red'});
+      M.toast({ html: error.message, classes: 'rounded red' });
     }
   }
 
@@ -36,7 +36,7 @@ const Login = () => {
 
   }
 
-  useEffect(() => {    
+  useEffect(() => {
     if (user) { navigate("/") }
     console.log('Login_uf')
   }, [user, navigate])
@@ -47,51 +47,50 @@ const Login = () => {
     <Loading />
   ) : (
     <>
-    <div className="contenedor">
       <div className="container ">
-      <div className="row" style={{paddingTop:'25vh'}}>
-        <div className="col s12  m8 offset-m2">
-          <div className="card center-align">
-          <div className="card-conten container">
-            <div className="row">
-              <div className="col s12 center">
-                <span className='card-title'>Iniciar Sesión</span>
-              </div>
-            </div>            
-            <form>              
-                 <div className="row">
-                <div className="input-field col s12">
-                  <input 
-                  className='focus-style'
-                  type="email" 
-                  name="email" 
-                  id="email"                 
-                  onChange={(e) => { handleOnChange(e) }} />
-                  <label htmlFor='email'>Correo</label>
+        <div className="row">
+          <div className="col s12  m8 offset-m2">
+            <div className="card center-align" style={{ borderRadius: '30px' }}>
+              <div className="card-conten container">
+                <div className="row">
+                  <div className="col s12 center">
+                    <span className='card-title'>Iniciar Sesión</span>
+                  </div>
+                </div>
+                <form>
+                  <div className="row">
+                    <div className="input-field col s12">
+                      <input
+                        className='focus-style'
+                        type="email"
+                        name="email"
+                        id="email"
+                        onChange={(e) => { handleOnChange(e) }} />
+                      <label htmlFor='email'>Correo</label>
+                    </div>
+                  </div>
+                  <div className="row">
+                    <div className="input-field col s12">
+                      <input className='focus-style' type='password' name="psw" id="psw" onChange={(e) => { handleOnChange(e) }} />
+                      <label htmlFor="psw">Contraseña</label>
+                    </div>
+                  </div>                  
+                </form>
+                <div className="card-action" style={{border: 'none'}}>
+                <div className="row">
+                  <div className="col s12 ">
+                    <button className='btn wave-effect wave-light' onClick={handleSubmit}><i className='material-icons right'>start</i>Entrar</button>
+                  </div>
+                  {
+                    cargando && <div className="col s12"><Loading /></div>
+                  }
+                </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="input-field col s12">
-                  <input className='focus-style' type='password' name="psw" id="psw" onChange={(e) => { handleOnChange(e) }} />
-                  <label htmlFor="psw">Contraseña</label>                  
-                </div>                
-              </div>
-              <div className="row">
-                <div className="col s12 center" style={{margin:'10px'}}>
-                  <button className='btn wave-effect wave-light blue-grey darken-3' onClick={handleSubmit}><i className='material-icons right'>start</i>Entrar</button>
-                </div>
-                {
-                  cargando && <div className="col s12"><Loading/></div>
-                }
-              </div>                        
-            </form>
-            </div>  
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    </div> 
-
     </>
   )
 }

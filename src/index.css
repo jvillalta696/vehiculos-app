@@ -1,0 +1,10 @@
+@import  '~materialize-css/dist/css/materialize.min.css';
+
+/* index.css */
+/* Otros estilos globales aquí */
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #fafafa;
+  }
+  
