@@ -3,21 +3,22 @@ import { addUsers, deleteUser, getUsers } from '../services/autUser.service'
 import Loading from '../components/loadings/Loading';
 import { getById, insert, remove, update } from '../services/firestore.service';
 import UserForm from '../components/forms/UserForm';
+import M from 'materialize-css';
 
-const ConfigView = () => {
+const ConfigView = ({ isLoading }) => {
 
     const templateUser = {
-        email:"",
-        password:"",
+        email: "",
+        password: "",
         dbCode: "",
-        rol:"",
-        companyName:"",
-        modifyFields:{
-            CodColorTap:true,
-            CodUbicacion:true,
-            Comentarios:true,
-            DUA:true,
-            kilometraje:true,
+        rol: "",
+        companyName: "",
+        modifyFields: {
+            CodColorTap: true,
+            CodUbicacion: true,
+            Comentarios: true,
+            DUA: true,
+            kilometraje: true,
         }
     }
 
@@ -27,18 +28,25 @@ const ConfigView = () => {
 
     const handleGetUser = async () => {
         try {
+            isLoading(true);
             const response = await getUsers();
             console.log(response);
             setUsers(response);
         } catch (error) {
             alert(error.message);
-        }
+        } finally { isLoading(false) };
     }
 
     const handlegetCurrentUser = async (uid, email) => {
-        const usrConf = await getById('Usuarios', uid);
-        setCurrentUser({ ...usrConf.data(), email, id: uid });
-        console.log(usrConf.data());
+        try {
+            isLoading(true);
+            const usrConf = await getById('Usuarios', uid);
+            setCurrentUser({ ...usrConf.data(), email, id: uid });
+            console.log(usrConf.data());
+        } catch (error) {
+            alert(error.message);
+        }finally{isLoading(false)}
+
     }
 
     const handleModificarPropiedad = (propiedad) => {
@@ -57,46 +65,51 @@ const ConfigView = () => {
 
     const handleUpdateUser = async (id) => {
         try {
+            isLoading(true);
             await update("Usuarios", currentUser, id)
-            alert("Actualizacion exitosa!!")
+            M.toast({ html: 'Usuario actualizado con exito', classes: 'rounded teal' });
+            //alert("Actualizacion exitosa!!")
         } catch (error) {
             alert(`No se a podido actualizar: ${error.message}`)
-        }
+        }finally{isLoading(false)}
     }
 
-    const handleCreateUser = async (newUser)=>{
+    const handleCreateUser = async (newUser) => {
         try {
+            isLoading(true);
             console.log(newUser);
-        const {
-            companyName,
-            dbCode,
-            email,
-            modifyFields,
-            password,
-            rol,
-        } = newUser;
-        const response = await addUsers({email,password});
-        await insert("Usuarios",{dbCode,companyName,email,modifyFields,rol,uid:response.uid},response.uid);
-        alert("usuario creado exitosamente");
-        setCurrentUser(null);
-        setUsers(null);
-        await  handleGetUser();
+            const {
+                companyName,
+                dbCode,
+                email,
+                modifyFields,
+                password,
+                rol,
+            } = newUser;
+            const response = await addUsers({ email, password });
+            await insert("Usuarios", { dbCode, companyName, email, modifyFields, rol, uid: response.uid }, response.uid);
+            //alert("usuario creado exitosamente");
+            M.toast({ html: 'Usuario creado con exito', classes: 'rounded teal' });
+            setCurrentUser(null);
+            setUsers(null);
+            await handleGetUser();
         } catch (error) {
             alert(error.message)
-        }
+        }finally{isLoading(false)}
     }
 
-    const handleDelete = async (id)=>{
+    const handleDelete = async (id) => {
         await deleteUser(id);
-        await remove("Usuarios",id);
-        alert("Usuario borrado con exito");
+        await remove("Usuarios", id);
+        M.toast({ html: 'Usuario borrado con exito', classes: 'rounded teal' });
+        //alert("Usuario borrado con exito");
         setUsers(null);
-        await  handleGetUser();
+        await handleGetUser();
     }
 
     const handleOnChange = (e) => {
-        const { name, value, selectedOptions} = e.target;
-        setCurrentUser({ ...currentUser, [name]: value,companyName: name === "dbCode" ? selectedOptions[0].text : currentUser.companyName, })
+        const { name, value, selectedOptions } = e.target;
+        setCurrentUser({ ...currentUser, [name]: value, companyName: name === "dbCode" ? selectedOptions[0].text : currentUser.companyName, })
     }
 
     useEffect(() => {
@@ -106,25 +119,58 @@ const ConfigView = () => {
 
     if (users) {
         return (
-            <div>
-                <h1>ConfigView</h1>                
-                {!currentUser && <>
-                <button onClick={()=>{setTypeForm("add");setCurrentUser(templateUser)}}>Agregar Usuario</button>
-                <ul>
-                    {users.map(usr => (
-                        <li key={usr.uid}>
-                            {usr.email}
-                            <button onClick={() => {setTypeForm("update");handlegetCurrentUser(usr.uid, usr.email) }}>Edit</button>
-                            <button onClick={()=>{handleDelete(usr.uid)}}>Delete</button>
-                        </li>
-                    ))}
-                </ul>
-                </>}
-                {currentUser &&<UserForm currentUser={currentUser} updateUser={handleUpdateUser} updateCurrent={setCurrentUser} addUser={handleCreateUser} change={handleOnChange} modifyProperty={handleModificarPropiedad} typeForm={typeForm}/>}
+            <div className='card'>
+                <div className="card-content">
+                    <span className='card-title'>Configuracion</span>
+                    {!currentUser && <>
+                        <button className='btn' onClick={() => { setTypeForm("add"); setCurrentUser(templateUser) }}><i className='large right prefix material-icons'>add</i> Agregar Usuario</button>
+                        <ul className='collection'>
+                            {users.map(usr => (
+                                <li className='collection-item' key={usr.uid}>
+                                    <div className='row' style={{ marginBottom: '0px' }}>
+                                        <div className='col s12 m6'>
+                                            <div>
+                                                <span className='flow-text'>{usr.email}</span>
+                                            </div>
+
+                                        </div>
+                                        <div className='col s12 m6'>
+                                            <div style={{ display: 'flex', justifyContent: 'end' }}>
+                                                <div style={{ padding: '5px' }}>
+                                                    <button className='btn-floating waves-effect waves-light'
+                                                        onClick={() => { setTypeForm("update"); handlegetCurrentUser(usr.uid, usr.email) }}>
+                                                        <i className='large material-icons'>edit</i>
+                                                    </button>
+                                                </div>
+                                                <div style={{ padding: '5px' }}>
+                                                    <button className='btn-floating waves-effect waves-light red lighten-2' onClick={() => { handleDelete(usr.uid) }}><i className='large material-icons'>delete</i></button>
+                                                </div>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+
+
+                                </li>
+                            ))}
+                        </ul>
+                    </>}
+                    {currentUser &&
+                        <UserForm
+                            currentUser={currentUser}
+                            updateUser={handleUpdateUser}
+                            updateCurrent={setCurrentUser}
+                            addUser={handleCreateUser}
+                            change={handleOnChange}
+                            modifyProperty={handleModificarPropiedad}
+                            typeForm={typeForm} />}
+                </div>
+
             </div>
 
         )
-    } else { return (<Loading />) }
+    } else { return (<><div style={{ display: 'grid', placeItems: 'center' }}><Loading /></div></>) }
 }
 
 

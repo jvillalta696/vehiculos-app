@@ -82,7 +82,7 @@ const Login = () => {
                     <button className='btn wave-effect wave-light' onClick={handleSubmit}><i className='material-icons right'>start</i>Entrar</button>
                   </div>
                   {
-                    cargando && <div className="col s12"><Loading /></div>
+                    cargando && <div ><Loading /></div>
                   }
                 </div>
                 </div>

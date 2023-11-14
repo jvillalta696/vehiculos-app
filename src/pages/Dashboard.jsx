@@ -6,6 +6,7 @@ import VehiculoForm from '../components/forms/VehiculoForm';
 import Loading from '../components/loadings/Loading';
 import ConfigView from '../views/ConfigView';
 import Nav from '../components/navs/Nav';
+import LoadingBar from '../components/loadings/LoadingBar';
 
 const Dashboard = () => {
 
@@ -13,7 +14,8 @@ const Dashboard = () => {
   const [currentVehiculo, setCurrentVehiculo] = useState(null);
   const [currentView, setCurrentView] = useState("main")
   const [vin, setVin] = useState(null);
-  const { signout, config } = useAuth()
+  const { signout, config } = useAuth();
+  const [loading,setLoading] = useState(false);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -27,12 +29,13 @@ const Dashboard = () => {
 
   const handleGetVehiculoByVIN = async () => {
     try {
+      setLoading(true)
       setCurrentVehiculo(null);
       const data = await getVehiculo(vin, config.dbCode);
       setVehiculos(data);
     } catch (error) {
       alert(error.message)
-    }
+    }finally{setLoading(false)}
   };
 
   if (config) {
@@ -40,11 +43,11 @@ const Dashboard = () => {
       <>
         <header>
           <Nav selectView={handleSetCurrentView} onSignOut={signout} reset={setCurrentVehiculo}/>
+          {loading&&<><LoadingBar/></>}
         </header>
         <main>
           <div className="container">
-            <h1 className='center'>Dashboard</h1>
-            <h5>Compañia: {config.companyName}</h5>
+            <h3 className='center'>Compañia: {config.companyName}</h3>
             {currentView === "main" && <>
             <div className="row">
               <div className="input-field col s12 m6">                
@@ -59,10 +62,10 @@ const Dashboard = () => {
               
               <div>
                 {vehiculos && <TableVehiculos data={vehiculos} update={setCurrentVehiculo} reset={setVehiculos} />}
-                {currentVehiculo && <VehiculoForm data={currentVehiculo} close={setCurrentVehiculo} />}
+                {currentVehiculo && <VehiculoForm data={currentVehiculo} close={setCurrentVehiculo} isLoading={setLoading}/>}
               </div>
             </>}
-            {currentView === "config" && <ConfigView />}
+            {currentView === "config" && <ConfigView isLoading={setLoading}/>}
           </div>
 
         </main>
@@ -71,7 +74,11 @@ const Dashboard = () => {
         </footer>
       </>
     )
-  } else { return (<Loading />) }
+  } else { return (<>
+  <div className="loading-container">
+    <Loading />
+  </div>
+  </>) }
 }
 
 export default Dashboard

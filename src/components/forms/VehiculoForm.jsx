@@ -4,7 +4,7 @@ import SelectColor from '../selects/SelectColor'
 import { pathVehiculo } from '../../services/vehiculos.service';
 import { useAuth } from '../../contexts/AuthContext';
 import M from 'materialize-css';
-const VehiculoForm = ({ data, close }) => {
+const VehiculoForm = ({ data, close, isLoading }) => {
     const [upVehiculo, setUpVehiculo] = useState({});
     const { config } = useAuth()
     const handleOnchage = (e) => {
@@ -16,12 +16,15 @@ const VehiculoForm = ({ data, close }) => {
 
     const handleSubmit = async () => {
         try {
+            isLoading(true);
             const response = await pathVehiculo(upVehiculo, config.dbCode, data.VIN);
             console.log(response)
-            alert('Datos actualizados con exito');
+            //alert('Datos actualizados con exito');
+            M.toast({ html: 'Datos actualizados con exito', classes: 'rounded teal' });
         } catch (error) {
-            alert(error.message)
-        }
+            //alert(error.message)
+            M.toast({ html: error.message, classes: 'rounded red' });
+        }finally{isLoading(false)}
     }
 
     const handleClose = () => {
@@ -109,7 +112,7 @@ const VehiculoForm = ({ data, close }) => {
 
                         </div>
                         <div className="col s6 center">
-                            <button className='btn' onClick={handleClose}>salir</button>
+                            <button className='btn yellow lighten-2 black-text' onClick={handleClose}>salir</button>
                         </div>
                     </div>
                 </div>

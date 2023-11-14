@@ -11,3 +11,10 @@ body {
 .navbar-fixed {
     z-index: 999;
   }
+
+  .loading-container {
+    display: grid;
+    place-items: center; /* Centra horizontal y verticalmente */
+    width: 100vw; /* O ajusta el ancho según tus necesidades */
+    height: 100vh; /* O ajusta la altura según tus necesidades */
+}
