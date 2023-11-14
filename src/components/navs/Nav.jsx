@@ -28,7 +28,7 @@ const Nav = ({selectView,onSignOut,reset}) => {
         </ul>
       </div>
     </nav>
-    <ul className="sidenav" id='slide-out' style={{zIndex:'1'}} ref={handleSidenavRef}>
+    <ul className="sidenav" id='slide-out' ref={handleSidenavRef}>
           <li><a className='sidenav-close' onClick={handleInicio}>Inicio</a></li>
           {config.rol==="admin"&&<li><a className='sidenav-close' onClick={()=>{selectView("config")}}>Configuración</a></li>}
           <li><a className='sidenav-close' onClick={onSignOut}>Salir</a></li>
