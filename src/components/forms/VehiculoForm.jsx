@@ -4,8 +4,9 @@ import SelectColor from '../selects/SelectColor'
 import { pathVehiculo } from '../../services/vehiculos.service';
 import { useAuth } from '../../contexts/AuthContext';
 import M from 'materialize-css';
+import { validateVehiculoData } from '../../libs/validations';
 const VehiculoForm = ({ data, close, isLoading }) => {
-    const [upVehiculo, setUpVehiculo] = useState({});
+    const [upVehiculo, setUpVehiculo] = useState(null);
     const { config } = useAuth()
     const handleOnchage = (e) => {
         const { name, value } = e.target;
@@ -17,6 +18,7 @@ const VehiculoForm = ({ data, close, isLoading }) => {
     const handleSubmit = async () => {
         try {
             isLoading(true);
+            validateVehiculoData(upVehiculo)
             const response = await pathVehiculo(upVehiculo, config.dbCode, data.VIN);
             console.log(response)
             //alert('Datos actualizados con exito');
@@ -108,11 +110,11 @@ const VehiculoForm = ({ data, close, isLoading }) => {
                 <div className="card-action">
                     <div className='row'>
                         <div className="col s6 center">
-                            <button className='btn' onClick={handleSubmit}>actualizar</button>
+                            <button disabled={!upVehiculo} className='btn' onClick={handleSubmit}>actualizar</button>
 
                         </div>
                         <div className="col s6 center">
-                            <button className='btn yellow lighten-2 black-text' onClick={handleClose}>salir</button>
+                            <button  className='btn yellow lighten-2 black-text' onClick={handleClose}>salir</button>
                         </div>
                     </div>
                 </div>

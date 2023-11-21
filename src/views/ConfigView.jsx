@@ -4,8 +4,12 @@ import Loading from '../components/loadings/Loading';
 import { getById, insert, remove, update } from '../services/firestore.service';
 import UserForm from '../components/forms/UserForm';
 import M from 'materialize-css';
+import { useAuth } from '../contexts/AuthContext';
+import { validateCreateData, validateLoginData, validateUserData } from '../libs/validations';
 
 const ConfigView = ({ isLoading }) => {
+
+
 
     const templateUser = {
         email: "",
@@ -25,6 +29,13 @@ const ConfigView = ({ isLoading }) => {
     const [typeForm, setTypeForm] = useState("");
     const [users, setUsers] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
+    const {user}=useAuth();
+
+    const validateSameUser = (data)=>{
+        if(data===user.uid){
+            throw new Error("No puedes eliminar el usuario actual");
+        }
+    }
 
     const handleGetUser = async () => {
         try {
@@ -66,17 +77,20 @@ const ConfigView = ({ isLoading }) => {
     const handleUpdateUser = async (id) => {
         try {
             isLoading(true);
+            validateUserData(currentUser);
             await update("Usuarios", currentUser, id)
             M.toast({ html: 'Usuario actualizado con exito', classes: 'rounded teal' });
             //alert("Actualizacion exitosa!!")
         } catch (error) {
-            alert(`No se a podido actualizar: ${error.message}`)
+            M.toast({html: error.message,classes:'rounded red'})
         }finally{isLoading(false)}
     }
 
     const handleCreateUser = async (newUser) => {
-        try {
+        try {            
             isLoading(true);
+            validateCreateData(newUser);
+            validateUserData(newUser);            
             console.log(newUser);
             const {
                 companyName,
@@ -94,17 +108,23 @@ const ConfigView = ({ isLoading }) => {
             setUsers(null);
             await handleGetUser();
         } catch (error) {
-            alert(error.message)
+            M.toast({html: error.message,classes:'rounded red'})
         }finally{isLoading(false)}
     }
 
     const handleDelete = async (id) => {
+        try {
+            validateSameUser(id);
         await deleteUser(id);
         await remove("Usuarios", id);
         M.toast({ html: 'Usuario borrado con exito', classes: 'rounded teal' });
         //alert("Usuario borrado con exito");
         setUsers(null);
         await handleGetUser();
+        } catch (error) {
+            M.toast({ html: error.message, classes: 'rounded red' })
+        }
+        
     }
 
     const handleOnChange = (e) => {

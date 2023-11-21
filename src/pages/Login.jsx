@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import Loading from "../components/loadings/Loading";
+import { validateLoginData } from "../libs/validations.js";
 import M from 'materialize-css';
 
 const Login = () => {
@@ -18,6 +19,7 @@ const Login = () => {
     e.preventDefault();
     try {
       setCargando(true);
+      validateLoginData(formUser)
       await signIn(formUser.email, formUser.psw);
       setCargando(false);
     } catch (error) {

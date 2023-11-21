@@ -14,7 +14,7 @@ const Dashboard = () => {
   const [currentVehiculo, setCurrentVehiculo] = useState(null);
   const [currentView, setCurrentView] = useState("main")
   const [vin, setVin] = useState(null);
-  const { signout, config } = useAuth();
+  const { signout, config,user } = useAuth();
   const [loading,setLoading] = useState(false);
 
   const handleOnChange = (e) => {
@@ -44,6 +44,7 @@ const Dashboard = () => {
         <header>
           <Nav selectView={handleSetCurrentView} onSignOut={signout} reset={setCurrentVehiculo}/>
           {loading&&<><LoadingBar/></>}
+          <p className='right'>Usario: {user.email}</p>
         </header>
         <main>
           <div className="container">
