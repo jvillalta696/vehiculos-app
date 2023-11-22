@@ -80,6 +80,7 @@ const ConfigView = ({ isLoading }) => {
             validateUserData(currentUser);
             await update("Usuarios", currentUser, id)
             M.toast({ html: 'Usuario actualizado con exito', classes: 'rounded teal' });
+            if(user.uid===id){M.toast({ html: 'El usuario actual fue actulizado reinicie sesion para visualizar los cambios', classes: 'rounded teal' });}
             //alert("Actualizacion exitosa!!")
         } catch (error) {
             M.toast({html: error.message,classes:'rounded red'})
