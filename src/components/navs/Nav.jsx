@@ -27,7 +27,7 @@ const Nav = ({selectView,onSignOut,reset}) => {
         {
           config.dbCode==='02'&&<img className='hide-on-small-only' style={{width:'200px',height:'60px',paddingTop:'5px'}} src={grandLogo}alt="" />
         }</a>
-        <a data-target="slide-out" class="sidenav-trigger show-on-small"><i class="material-icons">menu</i></a>
+        <a data-target="slide-out" className="sidenav-trigger show-on-small"><i className="material-icons">menu</i></a>
         <ul className="right hide-on-med-and-down">
           <li><a onClick={handleInicio}>Inicio</a></li>
           {config.rol==="admin"&&<li><a onClick={()=>{selectView("config");}}>Configuración</a></li>}

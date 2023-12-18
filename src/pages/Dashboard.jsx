@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import { getVehiculo } from '../services/vehiculos.service'
 import TableVehiculos from '../components/tables/TableVehiculos';
@@ -7,6 +7,8 @@ import Loading from '../components/loadings/Loading';
 import ConfigView from '../views/ConfigView';
 import Nav from '../components/navs/Nav';
 import LoadingBar from '../components/loadings/LoadingBar';
+import Html5QrcodePlugin from '../components/Html5QrcodePlugin';
+import M from 'materialize-css';
 
 const Dashboard = () => {
 
@@ -14,8 +16,10 @@ const Dashboard = () => {
   const [currentVehiculo, setCurrentVehiculo] = useState(null);
   const [currentView, setCurrentView] = useState("main")
   const [vin, setVin] = useState(null);
+  //const [data, setData] = useState('');
   const { signout, config,user } = useAuth();
   const [loading,setLoading] = useState(false);
+  const inputRef = useRef(null);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -28,7 +32,7 @@ const Dashboard = () => {
   }
 
   const handleGetVehiculoByVIN = async () => {
-    try {
+    try {      
       setLoading(true)
       setCurrentVehiculo(null);
       const data = await getVehiculo(vin, config.dbCode);
@@ -37,6 +41,16 @@ const Dashboard = () => {
       alert(error.message)
     }finally{setLoading(false)}
   };
+
+  const onNewScanResult = (decodedText, decodedResult) =>{   
+    console.log(decodedText);
+    console.log(decodedResult);
+    setVin(decodedText); 
+    inputRef.current.value =  decodedText; 
+    console.log(vin);
+    M.updateTextFields();
+    
+  }
 
   if (config) {
     return (
@@ -51,16 +65,25 @@ const Dashboard = () => {
             <h3 className='center'>Compañia: {config.companyName}</h3>
             {currentView === "main" && <>
             <div className="row">
+              <div className="col s12 m4">
+              <Html5QrcodePlugin
+               fps={10}
+               qrbox={250}
+               disableFlip={false}
+               qrCodeSuccessCallback={onNewScanResult}
+              />
+              </div>
+            </div>
+            <div className="row">
               <div className="input-field col s12 m6">                
                 <i className='material-icons prefix'>search</i>
-              <input type="text" name="vin" id="vin"onChange={handleOnChange} />
+              <input type="text" name="vin" id="vin" ref={inputRef} onChange={handleOnChange}/>
               <label htmlFor="vin">VIN</label>
               </div>
               <div className="col s12 m6 input-field">
               <button className='btn' onClick={handleGetVehiculoByVIN}>Buscar</button>
               </div>
-            </div>
-              
+            </div>  
               <div>
                 {vehiculos && <TableVehiculos data={vehiculos} update={setCurrentVehiculo} reset={setVehiculos} />}
                 {currentVehiculo && <VehiculoForm data={currentVehiculo} close={setCurrentVehiculo} isLoading={setLoading}/>}

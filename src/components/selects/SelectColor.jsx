@@ -49,7 +49,7 @@ const SelectColor = ({ data, update }) => {
               ))
             }
           </select>
-          <label htmlFor="CodColorTap">Color Tapa</label>
+          <label htmlFor="CodColorTap">Color Tapicería</label>
         </div>
       </>
     )

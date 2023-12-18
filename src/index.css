@@ -18,3 +18,7 @@ body {
     width: 100vw; /* O ajusta el ancho según tus necesidades */
     height: 100vh; /* O ajusta la altura según tus necesidades */
 }
+
+#html5-qrcode-select-camera.html5-qrcode-element {
+  display: block;
+}
