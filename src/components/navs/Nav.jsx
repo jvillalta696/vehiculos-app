@@ -49,9 +49,9 @@ const Nav = ({selectView,onSignOut,reset}) => {
           <a ><span className="email">{user.email}</span></a>
         </div>
       </li>
-          <li><a className='sidenav-close' onClick={handleInicio}><i class="material-icons">home</i>Inicio</a></li>
-          {config.rol==="admin"&&<li><a className='sidenav-close' onClick={()=>{selectView("config")}}><i class="material-icons">settings</i>Configuración</a></li>}
-          <li><a className='sidenav-close' onClick={onSignOut}><i class="material-icons">logout</i>Salir</a></li>
+          <li><a className='sidenav-close' onClick={handleInicio}><i className="material-icons">home</i>Inicio</a></li>
+          {config.rol==="admin"&&<li><a className='sidenav-close' onClick={()=>{selectView("config")}}><i className="material-icons">settings</i>Configuración</a></li>}
+          <li><a className='sidenav-close' onClick={onSignOut}><i className="material-icons">logout</i>Salir</a></li>
         </ul>
   </div>
     </>
