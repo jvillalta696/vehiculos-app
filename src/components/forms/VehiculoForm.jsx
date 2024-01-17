@@ -83,6 +83,45 @@ const VehiculoForm = ({ data, close, isLoading }) => {
             </div>
             </div>
            </div>
+           <div className="card">
+            <div className="card-content">
+            <h5 className='center'>Reserva</h5>
+            <div className="row">
+                <div className="col s12 m4">
+                    <label>Estado de Venta: </label>
+                    <span >{data.EstadoVenta}</span>
+                </div>
+                <div className="col s12 m4">
+                    <label>Fecha Reserva: </label>
+                    <span>{data.FechaReserva}</span>
+                </div>
+                <div className="col s12 m4">
+                    <label>Vendedor: </label>
+                    <span>{data.Vendedor}</span>
+                </div>
+            </div>
+            <div className='row'>
+                <div className="col s12 m4">
+                    <label >Fecha Arribo: </label>
+                    <span >{data.FechaArribo}</span>
+                </div>
+                <div className="col s12 m4">
+                    <label >Fecha Ven Reserva: </label>
+                    <span >{data.FechaVenc_Reserva}</span>
+                </div>
+                {/*<div className="col s12 m4">
+                    <label >Ultima Fech Serv: </label>
+                    <span >{data.UltimaFechServ}</span>
+    </div>*/}
+            </div>
+            <div className='row'>
+                <div className="col s12">
+                    <label >Observaciones: </label>
+                    <span >{data.Observaciones}</span>
+                </div>
+            </div>
+            </div>
+           </div>
             <div className="card">
                 <div className="card-content">
                     <h5 className='card-title center'>Datos para actualizar</h5>
