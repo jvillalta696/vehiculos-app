@@ -7,6 +7,8 @@ const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, mod
         if (ref) M.FormSelect.init(ref);
     }
 
+
+
     return (
         <>
             <div className='row'>
@@ -30,7 +32,7 @@ const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, mod
                 </>}
             </div>
             <div className='row'>
-                <div className="input-field col s12 m6">
+                <div className="input-field col s12 m4">
                     <select ref={handleSelectRef} name="rol" id='rol' onChange={change} value={currentUser.rol}>
                         <option value="">Seleccione un tipo de usuario</option>
                         <option value="user">User</option>
@@ -38,13 +40,39 @@ const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, mod
                     </select>
                     <label htmlFor="rol">Rol:</label>
                 </div>
-                <div className="input-field col s12 m6">
-                    <select ref={handleSelectRef} name="dbCode" id='dbCode' onChange={change} value={currentUser.dbCode}>
+                <div className="input-field col s12 m1">
+                    {/*<select ref={handleSelectRef} name="dbCode" id='dbCode' onChange={change} value={currentUser.dbCode}>
                         <option value="">Seleccione una base</option>
                         <option value="01">Cori Car</option>
                         <option value="02">GrandMotors</option>
-                    </select>
-                    <label htmlFor="dbCode">Compañia :</label>
+            </select>*/}
+                    <label className='hide-on-small-only' htmlFor="dbCode">Compañia :</label>                   
+                </div>
+                <div className="col s12 m4">
+                {
+                        currentUser.companies.map((compania) => (
+                            <p key={compania.dbCode}>
+                                <label key={compania.dbCode}>
+                                    <input
+                                        className="filled-in"
+                                        type="checkbox"
+                                        id={compania.dbCode}
+                                        name={compania.companyName}
+                                        checked={compania.active}
+                                        onChange={(event) => {
+                                            const isChecked = event.target.checked;
+                                            const updatedCompanies = currentUser.companies.map((c) =>
+                                                c.dbCode === compania.dbCode ? { ...c, active: isChecked } : c
+                                            );
+                                            updateCurrent({ ...currentUser, companies: updatedCompanies });
+                                        }}
+                                    />
+                                    <span key={compania.dbCode}>{compania.companyName}</span>
+                                </label>
+                            </p>
+                        ))
+
+                    }
                 </div>
             </div>
             <ul>
@@ -68,7 +96,7 @@ const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, mod
                     ))}
             </ul>
             <div className='row center'>
-                <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems:'center'}}>
+                <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
                     {typeForm === "add" && <button className='btn waves-effect waves-light' onClick={() => { addUser(currentUser) }}>Crear</button>}
                     {typeForm === "update" && <button className='btn waves-effect waves-light' onClick={() => { updateUser(currentUser.id) }}>Actualizar</button>}
                     <button className='btn waves-effect waves-light yellow lighten-2 black-text' onClick={() => { updateCurrent(null) }}>salir</button>
