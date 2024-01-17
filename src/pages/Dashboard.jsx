@@ -62,6 +62,22 @@ const Dashboard = () => {
 
   }
 
+  const obtenerNombre = (usuario) => {
+    let dbCode;
+    if ('companies' in usuario) {
+      if (usuario.companies.every((compania) => compania.active)) {
+        dbCode = "Cori Car";
+      } else {
+        const companiaActiva = usuario.companies.find((compania) => compania.active);
+        dbCode = companiaActiva.companyName;
+      }
+    } else {
+      dbCode = usuario.companyName;
+    }
+    
+    return dbCode;
+  }
+
   if (config) {
     return (
       <>
@@ -72,7 +88,7 @@ const Dashboard = () => {
         </header>
         <main>
           <div className="container">
-            <h3 className='center'>Compañia: {config.companyName}</h3>
+            <h3 className='center'>Compañia: {obtenerNombre(config)}</h3>
             {currentView === "main" && <>
               <div className="row">
                 <div className="col s12 m4">
