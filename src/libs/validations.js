@@ -58,6 +58,9 @@ export const validateUserData = (data) => {
         rol === ''
     ) throw new Error("El campo Rol es invalido");
 
-
+    if (data.companies) {
+        const todasInactivas = data.companies.every((compania) => !compania.active);
+        if (todasInactivas) throw new Error("Al menos una compañia debe ser seleccionada");
+    }
 }
 
