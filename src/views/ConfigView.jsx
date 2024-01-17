@@ -23,16 +23,28 @@ const ConfigView = ({ isLoading }) => {
             Comentarios: true,
             DUA: true,
             kilometraje: true,
-        }
+        },
+        companies: [
+            {
+                dbCode: "01",
+                active: true,
+                companyName: "Cori Car"
+            },
+            {
+                dbCode: "02",
+                active: true,
+                companyName: "GrandMotors"
+            }
+        ]
     }
 
     const [typeForm, setTypeForm] = useState("");
     const [users, setUsers] = useState(null);
     const [currentUser, setCurrentUser] = useState(null);
-    const {user}=useAuth();
+    const { user } = useAuth();
 
-    const validateSameUser = (data)=>{
-        if(data===user.uid){
+    const validateSameUser = (data) => {
+        if (data === user.uid) {
             throw new Error("No puedes eliminar el usuario actual");
         }
     }
@@ -51,12 +63,18 @@ const ConfigView = ({ isLoading }) => {
     const handlegetCurrentUser = async (uid, email) => {
         try {
             isLoading(true);
-            const usrConf = await getById('Usuarios', uid);
-            setCurrentUser({ ...usrConf.data(), email, id: uid });
-            console.log(usrConf.data());
+            const usrConf = (await getById('Usuarios', uid)).data();
+            if (!('companies' in usrConf)) {
+                usrConf.companies = [
+                    { companyName: "Cori Car", dbCode: '01', active: usrConf.dbCode === "01" ? true : false },
+                    { companyName: 'GrandMotors', dbCode: '02', active: usrConf.dbCode === "02" ? true : false },
+                ];                
+            }
+            setCurrentUser({ ...usrConf, email, id: uid });
+            console.log(usrConf);
         } catch (error) {
             alert(error.message);
-        }finally{isLoading(false)}
+        } finally { isLoading(false) }
 
     }
 
@@ -80,18 +98,18 @@ const ConfigView = ({ isLoading }) => {
             validateUserData(currentUser);
             await update("Usuarios", currentUser, id)
             M.toast({ html: 'Usuario actualizado con exito', classes: 'rounded teal' });
-            if(user.uid===id){M.toast({ html: 'El usuario actual fue actulizado reinicie sesion para visualizar los cambios', classes: 'rounded teal' });}
+            if (user.uid === id) { M.toast({ html: 'El usuario actual fue actulizado reinicie sesion para visualizar los cambios', classes: 'rounded teal' }); }
             //alert("Actualizacion exitosa!!")
         } catch (error) {
-            M.toast({html: error.message,classes:'rounded red'})
-        }finally{isLoading(false)}
+            M.toast({ html: error.message, classes: 'rounded red' })
+        } finally { isLoading(false) }
     }
 
     const handleCreateUser = async (newUser) => {
-        try {            
+        try {
             isLoading(true);
             validateCreateData(newUser);
-            validateUserData(newUser);            
+            validateUserData(newUser);
             console.log(newUser);
             const {
                 companyName,
@@ -100,32 +118,33 @@ const ConfigView = ({ isLoading }) => {
                 modifyFields,
                 password,
                 rol,
+                companies,
             } = newUser;
             const response = await addUsers({ email, password });
-            await insert("Usuarios", { dbCode, companyName, email, modifyFields, rol, uid: response.uid }, response.uid);
+            await insert("Usuarios", { dbCode, companyName, email, modifyFields, rol, companies, uid: response.uid }, response.uid);
             //alert("usuario creado exitosamente");
             M.toast({ html: 'Usuario creado con exito', classes: 'rounded teal' });
             setCurrentUser(null);
             setUsers(null);
             await handleGetUser();
         } catch (error) {
-            M.toast({html: error.message,classes:'rounded red'})
-        }finally{isLoading(false)}
+            M.toast({ html: error.message, classes: 'rounded red' })
+        } finally { isLoading(false) }
     }
 
     const handleDelete = async (id) => {
         try {
             validateSameUser(id);
-        await deleteUser(id);
-        await remove("Usuarios", id);
-        M.toast({ html: 'Usuario borrado con exito', classes: 'rounded teal' });
-        //alert("Usuario borrado con exito");
-        setUsers(null);
-        await handleGetUser();
+            await deleteUser(id);
+            await remove("Usuarios", id);
+            M.toast({ html: 'Usuario borrado con exito', classes: 'rounded teal' });
+            //alert("Usuario borrado con exito");
+            setUsers(null);
+            await handleGetUser();
         } catch (error) {
             M.toast({ html: error.message, classes: 'rounded red' })
         }
-        
+
     }
 
     const handleOnChange = (e) => {
