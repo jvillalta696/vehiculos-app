@@ -19,7 +19,7 @@ const VehiculoForm = ({ data, close, isLoading, cdDB }) => {
         try {
             isLoading(true);
             validateVehiculoData(upVehiculo)
-            const response = await pathVehiculo(upVehiculo, config.dbCode, data.VIN);
+            const response = await pathVehiculo(upVehiculo, cdDB, data.VIN);
             console.log(response)
             //alert('Datos actualizados con exito');
             M.toast({ html: 'Datos actualizados con exito', classes: 'rounded teal' });
