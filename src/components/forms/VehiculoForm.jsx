@@ -5,7 +5,7 @@ import { pathVehiculo } from '../../services/vehiculos.service';
 import { useAuth } from '../../contexts/AuthContext';
 import M from 'materialize-css';
 import { validateVehiculoData } from '../../libs/validations';
-const VehiculoForm = ({ data, close, isLoading }) => {
+const VehiculoForm = ({ data, close, isLoading, cdDB }) => {
     const [upVehiculo, setUpVehiculo] = useState(null);
     const { config } = useAuth()
     const handleOnchage = (e) => {
@@ -140,7 +140,7 @@ const VehiculoForm = ({ data, close, isLoading }) => {
                         </div>
                     </div>
                     <div className='row'>
-                        <SelectUbicaciones name="CodUbicacion" update={handleOnchage} data={data.CodUbicacion} />
+                        <SelectUbicaciones name="CodUbicacion" update={handleOnchage} data={data.CodUbicacion} cdDB={cdDB}/>
                         <SelectColor name="CodColorTap" update={handleOnchage} data={data.CodColorTap} />
                     </div>
 

@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Loading from '../loadings/Loading';
 import M from 'materialize-css';
 
-const SelectUbicaciones = ({ data, update }) => {
+const SelectUbicaciones = ({ data, update, cdDB }) => {
 
   const [ubicaciones, setUbicaciones] = useState(null);
   const [currentUB, setCurrentUB] = useState("");
@@ -20,9 +20,10 @@ const SelectUbicaciones = ({ data, update }) => {
   }
 
   useEffect(() => {
-    if (config)
-      handleGetUbicaciones(config.dbCode);
-  }, [config]);
+    if (cdDB){    
+      handleGetUbicaciones(cdDB);
+    }      
+  }, [cdDB]);
 
   useEffect(() => {
     if (data) setCurrentUB(data);

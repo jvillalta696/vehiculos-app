@@ -117,7 +117,7 @@ const Dashboard = () => {
               </div>
               <div>
                 {vehiculos && <TableVehiculos data={vehiculos} update={setCurrentVehiculo} reset={setVehiculos} />}
-                {currentVehiculo && <VehiculoForm data={currentVehiculo} close={setCurrentVehiculo} isLoading={setLoading} />}
+                {currentVehiculo && <VehiculoForm data={currentVehiculo} cdDB={codeDB} close={setCurrentVehiculo} isLoading={setLoading} />}
               </div>
             </>}
             {currentView === "config" && <ConfigView isLoading={setLoading} />}
