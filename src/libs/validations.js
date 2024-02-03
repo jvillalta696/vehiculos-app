@@ -46,12 +46,12 @@ export const validateVehiculoData = (data) => {
 
 export const validateUserData = (data) => {
     const { dbCode, rol } = data;
-    if (
+    /*if (
         dbCode === null ||
         dbCode === undefined ||
         dbCode === ''
     ) throw new Error("El campo compañia es invalido");
-
+*/
     if (
         rol === null ||
         rol === undefined ||
