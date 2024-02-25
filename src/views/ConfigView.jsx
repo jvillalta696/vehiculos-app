@@ -23,6 +23,8 @@ const ConfigView = ({ isLoading }) => {
             Comentarios: true,
             DUA: true,
             kilometraje: true,
+            EntraAlmFiscal: true,
+            SalidaAlmFiscal: true
         },
         companies: [
             {
