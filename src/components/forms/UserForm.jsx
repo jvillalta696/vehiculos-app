@@ -1,12 +1,26 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import M from 'materialize-css'
 
 const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, modifyProperty, typeForm }) => {
+
+    const listProperties = {
+        CodColorTap: currentUser.modifyFields.CodColorTap || false,
+        CodUbicacion: currentUser.modifyFields.CodUbicacion || false,
+        Comentarios: currentUser.modifyFields.Comentarios || false,
+        DUA: currentUser.modifyFields.DUA || false,
+        kilometraje: currentUser.modifyFields.kilometraje || false,
+        EntraAlmFiscal: currentUser.modifyFields.EntraAlmFiscal || false,
+        SalidaAlmFiscal: currentUser.modifyFields.SalidaAlmFiscal || false
+    }
+
 
     const handleSelectRef = (ref) => {
         if (ref) M.FormSelect.init(ref);
     }
 
+useEffect(() => {
+  if (currentUser)updateCurrent({...currentUser,modifyFields:listProperties}) 
+}, [])
 
 
     return (
@@ -46,10 +60,10 @@ const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, mod
                         <option value="01">Cori Car</option>
                         <option value="02">GrandMotors</option>
             </select>*/}
-                    <label className='hide-on-small-only' htmlFor="dbCode">Compañia :</label>                   
+                    <label className='hide-on-small-only' htmlFor="dbCode">Compañia :</label>
                 </div>
                 <div className="col s12 m4">
-                {
+                    {
                         currentUser.companies.map((compania) => (
                             <p key={compania.dbCode}>
                                 <label key={compania.dbCode}>
@@ -77,7 +91,7 @@ const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, mod
             </div>
             <ul>
                 {
-                    Object.keys(currentUser.modifyFields).map((propertyName) => (
+                    Object.keys(listProperties).map((propertyName) => (
                         <li key={propertyName}>
                             {propertyName}:
                             <div className="switch">
@@ -85,7 +99,7 @@ const UserForm = ({ currentUser, updateCurrent, updateUser, addUser, change, mod
                                     Deshabilitado
                                     <input
                                         type="checkbox"
-                                        checked={currentUser.modifyFields[propertyName]} // Set the initial value
+                                        checked={listProperties[propertyName]} // Set the initial value
                                         onChange={() => modifyProperty(propertyName)}
                                     />
                                     <span className="lever"></span>
