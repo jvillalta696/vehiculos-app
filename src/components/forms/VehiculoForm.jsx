@@ -142,7 +142,7 @@ const VehiculoForm = ({ data, close, isLoading, cdDB }) => {
                     </div>
                     <div className='row'>
                         <SelectUbicaciones name="CodUbicacion" update={handleOnchage} data={data.CodUbicacion} cdDB={cdDB} />
-                        <SelectColor name="CodColorTap" update={handleOnchage} data={data.CodColorTap} />
+                        <SelectColor name="CodColorTap" update={handleOnchage} data={data.CodColorTap} cdDB={cdDB} />
                     </div>
                     <div className="row">
                         <div className="col s12 m6">

@@ -4,7 +4,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import Loading from '../loadings/Loading';
 import M from 'materialize-css';
 
-const SelectColor = ({ data, update }) => {
+const SelectColor = ({ data, update, cdDB }) => {
 
   const [color, setColor] = useState(null);
   const [currentColor, setCurrentColor] = useState("");
@@ -24,9 +24,9 @@ const SelectColor = ({ data, update }) => {
   }
 
   useEffect(() => {
-    if (config)
-      handleGetColor(config.dbCode);
-  }, [config]);
+    if (cdDB)
+      handleGetColor(cdDB);
+  }, [cdDB]);
 
   useEffect(() => {
     if (data) {
